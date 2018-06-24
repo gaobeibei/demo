@@ -5,6 +5,7 @@ import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 
 /**
  * Created by BBG on 2018/5/24.
@@ -12,7 +13,6 @@ import javax.persistence.*;
 @Data
 @Entity
 @Table(name = "user")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class User {
     @Id
     @GeneratedValue(generator = "system-uuid")
@@ -21,6 +21,7 @@ public class User {
 
     private String name;
 
+    @Min(value = 18,message = "未成年人禁止操作")
     private Integer age;
 
     private String phone;
