@@ -1,5 +1,7 @@
 package com.example.demo.aspect;
 
+import com.example.demo.entity.SysLog;
+import com.example.demo.repository.SysLogRepository;
 import com.example.demo.web.DemoController;
 import org.apache.tomcat.util.http.fileupload.servlet.ServletRequestContext;
 import org.aspectj.lang.JoinPoint;
@@ -9,28 +11,22 @@ import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 
 @Aspect
 @Component
 public class HttpAspect {
 
     final Logger log = LoggerFactory.getLogger(HttpAspect.class);
-//
-//    @Before("execution(public * com.example.demo.web.UserController.*(..))")
-//    public void log(){
-//        log.info("before");
-//    }
-//
-//    @After("execution(public * com.example.demo.web.UserController.*(..))")
-//    public void doAfter(){
-//        log.info("after");
-//    }
 
+    @Autowired
+    SysLogRepository sysLogRepository;
 
     @Pointcut("execution(public * com.example.demo.web.UserController.*(..))")
     public void log() {
@@ -40,16 +36,13 @@ public class HttpAspect {
     public void before(JoinPoint point) {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
-        //url
-        log.info("url={}",request.getRequestURI());
-        //method
-        log.info("method={}",request.getMethod());
-        //ip
-        log.info("ip={}",getAddr(request));
-        //类方法
-        log.info("class_method={}",point.getSignature().getDeclaringTypeName()+"."+point.getSignature().getName());
-        //参数
-        log.info("args={}",point.getArgs());
+
+        SysLog log = new SysLog();
+        log.setIp(getAddr(request));
+        log.setUrl(request.getRequestURI());
+        log.setArgs(point.getArgs().toString());
+        log.setTime(new Date());
+        sysLogRepository.save(log);
     }
 
 
