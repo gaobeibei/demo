@@ -144,24 +144,21 @@ public class UserController {
 
 
     public static void main(String[] args) {
-        List<List<Integer>> regionsList = new ArrayList<>();
-        List<Integer> intList1 = new ArrayList<>();
-        intList1.add(10);
-        intList1.add(20);
-        List<Integer> intList2 = new ArrayList<>();
-        intList1.add(30);
-        intList1.add(40);
-        regionsList.add(intList1);
-        regionsList.add(intList2);
-
-
-        regionsList.forEach(regions -> {
-            regions.forEach(integer -> {
-                System.out.println(integer);
-            });
-        });
-
-
+        Map<String, String> phoneMap = new HashMap<>();
+        Scanner scanner = new Scanner(System.in);
+        String input;
+        while (scanner.hasNext() && !Objects.equals(input = scanner.nextLine(), "noname")) {
+            String[] temps = input.split(" ");
+            phoneMap.put(temps[0], temps[1]);
+        }
+        while (scanner.hasNext()) {
+            String name = scanner.next();
+            if (phoneMap.containsKey(name)) {
+                System.out.println(phoneMap.get(scanner.next()));
+            } else {
+                System.out.println("Not fould");
+            }
+        }
     }
 
 
